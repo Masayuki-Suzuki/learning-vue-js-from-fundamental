@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <Chapter1></Chapter1>
+    <Chapter2></Chapter2>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import Chapter1 from './components/Chapter1.vue'
+import Chapter2 from './components/Chapter2.vue'
 
 export default Vue.extend({
   name: 'app',
   components : {
-    Chapter1
+    Chapter2
   }
 });
 </script>

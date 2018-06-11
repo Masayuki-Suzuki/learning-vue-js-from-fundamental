@@ -1,96 +1,70 @@
 <template lang="pug">
   .chapter4
     h1 {{ title }}
-    .searchForm
-      label.searchForm__input
-        input(v-model.number="budget" type="number")
-        | 円以下に絞り込む
-      label.searchForm__input
-        input(v-model.number="limit" type="number")
-        | 件を表示
-    p.result {{ matched.length }} 件中、 {{ limited.length }} 件を表示中
     div
-      button(@click="order=!order") 切り替え
-    ul.itemList
-      li.itemList__item(v-for="item in limited" :key="item.id")
-        |{{ item.name }}: {{ item.price }} 円
+      label.toggle
+        input(type="checkbox" v-model="toggle")
+        span(:class="!toggle && 'active'") Computed
+        span(:class="toggle && 'active'") Watch
+    Computed(v-if="!toggle")
+    Watch(v-if="toggle")
 </template>
 
 <script lang="ts">
   import Vue from 'vue'
-  import _ from 'lodash'
-  
-  interface listData {
-    id :number,
-    name :string,
-    price :number
+  import Computed from './computed.vue'
+  import Watch from './watch.vue'
+
+  const data :{
+    title :string
+    toggle: boolean,
+  } = {
+    title: 'Chapter4',
+    toggle: false,
   }
-  
-  interface mainData {
-    title :string,
-    budget :number,
-    limit :number,
-    order :boolean,
-    list :listData[]
-  }
-  
-  const data :mainData = {
-    title: 'Chapter 4',
-    budget: 300,
-    limit: 2,
-    order: false,
-    list: [
-      { id: 1, name: 'りんご', price: 100},
-      { id: 2, name: 'ばなな', price: 50},
-      { id: 3, name: 'いちご', price: 500},
-      { id: 4, name: 'オレンジ', price: 200},
-      { id: 5, name: 'メロン', price: 1000},
-    ]
-  }
-  
+
   export default Vue.extend({
     name: "Chapter4",
     data() {
       return data
     },
     computed: {
-      matched() :{}[] {
-        return this.list.filter(el => {
-          // less than equal. *not arrow!!
-          return el.price <= this.budget
-        }, this)
-      },
-      sorted() :{}[] {
-        return _.orderBy(this.matched, 'price', this.order ? 'desc' : 'asc')
-      },
-      limited() :{}[] {
-        return this.sorted.slice(0, this.limit)
+      current() :string {
+        return this.toggle ? 'Watch' : 'Computed'
       }
+    },
+    components: {
+      Computed,
+      Watch,
     }
   })
 </script>
 
 <style lang="scss" scoped>
-  li {
-    list-style: none;
-  }
-  .chapter4 {
-    padding: 0 0 50px;
-  }
-  .searchForm {
+  .toggle {
+    background: #ccc;
+    border-radius: 6px;
     display: flex;
     justify-content: space-between;
-    margin: 0 auto;
-    width: 50vw;
-    &__input {
-      text-align: left;
-      input {
-        border: solid 1px #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-        margin: 0 10px 0 0;
-        padding: 10px;
+    margin: 0 auto 40px;
+    padding: 5px;
+    width: 180px;
+    span {
+      color: #444;
+      font-weight: 600;
+      font-size: 12px;
+      text-align: center;
+      text-transform: uppercase;
+      padding: 10px 0;
+      width: 90px;
+      &.active {
+        background: #eee;
+        border-radius: 3px;
+        color: #666;
       }
+    }
+    input {
+      display: none;
     }
   }
 </style>
